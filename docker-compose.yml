@@ -1,0 +1,46 @@
+version: "3.6"
+services:
+  flask:
+    container_name: flask
+    build:
+      context: .
+      dockerfile: Dockerfile.flask
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./:/app
+    environment:
+      FLASK_ENV: development
+      RABBIT_MQ_URL: amqp://admin:admin@rabbit:5672
+    networks:
+      - backend
+
+  celery:
+    container_name: celery
+    build:
+      context: .
+      dockerfile: Dockerfile.celery
+    volumes:
+      - ./:/app
+    depends_on:
+      - rabbit
+    networks:
+      - backend
+    environment:
+      RABBIT_MQ_URL: amqp://admin:admin@rabbit:5672
+
+  rabbit:
+    container_name: rabbit
+    hostname: rabbit
+    image: rabbitmq:3.7.15-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    ports:
+      - "5672:5672"
+    networks:
+      - backend
+
+networks:
+  backend:
+    name: backend

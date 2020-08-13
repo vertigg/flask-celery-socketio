@@ -1,0 +1,7 @@
+Flask
+Flask-CORS
+amqp
+celery
+flask-socketio
+python-dotenv
+requests
