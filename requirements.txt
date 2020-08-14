@@ -7,3 +7,5 @@ python-dotenv
 requests
 gunicorn
 eventlet
+Flask-SQLAlchemy
+psycopg2

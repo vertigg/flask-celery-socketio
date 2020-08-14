@@ -12,8 +12,12 @@ services:
     environment:
       FLASK_ENV: development
       RABBIT_MQ_URL: amqp://admin:admin@rabbit:5672
+      DB_URI: postgresql://admin:admin@postgres:5432/flask
     networks:
       - backend
+    depends_on:
+      - rabbit
+      - postgres
     command:
       [
         "gunicorn",
@@ -33,10 +37,12 @@ services:
       - ./:/app
     depends_on:
       - rabbit
+      - postgres
     networks:
       - backend
     environment:
       RABBIT_MQ_URL: amqp://admin:admin@rabbit:5672
+      DB_URI: postgresql://admin:admin@postgres:5432/flask
     command:
       [
         "celery",
@@ -57,6 +63,20 @@ services:
       - RABBITMQ_DEFAULT_PASS=admin
     ports:
       - "5672:5672"
+    networks:
+      - backend
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+      POSTGRES_DB: "flask"
+    volumes:
+      - ./dbdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     networks:
       - backend
 

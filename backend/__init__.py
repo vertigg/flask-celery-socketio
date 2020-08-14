@@ -11,6 +11,7 @@ from flask_socketio import SocketIO
 from backend.config import BasicConfig
 from backend.routes import basic_routes
 from backend.socket import TaskMessageNamespace
+from backend.database import db
 
 logging.basicConfig()
 
@@ -28,6 +29,10 @@ def create_app(config_object: object = None) -> Flask:
     # Register all routes and setup CORS
     app.register_blueprint(basic_routes)
     CORS(app)
+
+    # Initialize db
+    db.init_app(app)
+    db.app = app
 
     return app
 
