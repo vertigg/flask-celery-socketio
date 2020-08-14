@@ -8,7 +8,7 @@ from flask_socketio import SocketIO
 celery = Celery(__name__, backend='rpc://')
 
 
-def configure_celery(app: Flask) -> Celery:
+def configure_celery(app: Flask, socketio: SocketIO) -> Celery:
     celery.conf.update(app.config)
 
     TaskBase = celery.Task
@@ -23,8 +23,15 @@ def configure_celery(app: Flask) -> Celery:
             Helper property that will allow Celery tasks to open SocketIO connections
             """
             if not self._socketio:
-                self._socketio = SocketIO(message_queue=app.config['BROKER_URL'])
+                self._socketio = socketio
             return self._socketio
+
+        def emit_response(self, message, room, event_type='response', namespace=None):
+            if not namespace:
+                namespace = app.config['DEFAULT_SOCKETIO_NAMESPACE']
+            self.socketio.emit(
+                event_type, {'message': message}, room=room, namespace=namespace
+            )
 
         def __call__(self, *args, **kwargs):
             with app.app_context():

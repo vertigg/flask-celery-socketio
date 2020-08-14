@@ -1,12 +1,13 @@
 """
 Entrypoint for Flask and Celery applications
 """
-from backend import app, socketio
+from backend import create_app, create_socket_io
 from backend.celery_app import configure_celery
 from backend.socket import TaskMessageNamespace
 
-socketio.on_namespace(TaskMessageNamespace('/sio'))
-celery = configure_celery(app)
+app = create_app()
+socketio = create_socket_io(app)
+celery = configure_celery(app, socketio)
 app.app_context().push()
 
 

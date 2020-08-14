@@ -8,3 +8,4 @@ echo 'Moving build files'
 mv build/static/* ../static/
 rm -r build/static
 mv build/* ../templates
+rm -r build

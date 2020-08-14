@@ -6,6 +6,7 @@ class BasicConfig:
     HOST = getenv('HOST', '127.0.0.1')
     PORT = int(getenv('PORT', 8000))
     SECRET_KEY = getenv('SECRET_KEY', 'secretkey')
+    DEFAULT_SOCKETIO_NAMESPACE = '/messages'
 
     DEBUG = True
     DEBUG_CELERY = True

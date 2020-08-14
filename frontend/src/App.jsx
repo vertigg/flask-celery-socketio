@@ -11,7 +11,7 @@ import socketIOClient from 'socket.io-client';
 import './App.css';
 
 const API_URL = 'http://127.0.0.1:5000';
-const SOCKETIO_URI = API_URL + '/sio';
+const SOCKETIO_URI = API_URL + '/messages';
 
 export default class App extends Component {
   constructor(props) {
