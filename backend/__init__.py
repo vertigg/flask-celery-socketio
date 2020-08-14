@@ -13,8 +13,8 @@ from backend.routes import basic_routes
 
 logging.basicConfig()
 
-template_dir = os.path.abspath('frontend/build')
-static_dir = os.path.join(template_dir, 'static')
+template_dir = os.path.abspath('templates')
+static_dir = os.path.abspath('static')
 
 
 def create_app(config_object: object = None) -> (Flask, SocketIO):

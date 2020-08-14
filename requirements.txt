@@ -5,3 +5,5 @@ celery
 flask-socketio
 python-dotenv
 requests
+gunicorn
+eventlet

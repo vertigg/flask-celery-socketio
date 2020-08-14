@@ -219,3 +219,6 @@ sketch
 
 .env
 .vscode
+templates/*
+static/*
+!.gitkeep

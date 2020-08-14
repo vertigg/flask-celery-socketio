@@ -4,7 +4,7 @@ services:
     container_name: flask
     build:
       context: .
-      dockerfile: Dockerfile.flask
+      dockerfile: Dockerfile
     ports:
       - "5000:5000"
     volumes:
@@ -14,12 +14,21 @@ services:
       RABBIT_MQ_URL: amqp://admin:admin@rabbit:5672
     networks:
       - backend
+    command:
+      [
+        "gunicorn",
+        "--bind",
+        "0.0.0.0:5000",
+        "--workers=1",
+        "app:app",
+        "--worker-class=eventlet",
+      ]
 
   celery:
     container_name: celery
     build:
       context: .
-      dockerfile: Dockerfile.celery
+      dockerfile: Dockerfile
     volumes:
       - ./:/app
     depends_on:
@@ -28,6 +37,16 @@ services:
       - backend
     environment:
       RABBIT_MQ_URL: amqp://admin:admin@rabbit:5672
+    command:
+      [
+        "celery",
+        "-A",
+        "app.celery",
+        "worker",
+        "--loglevel=info",
+        "--uid=nobody",
+        "--gid=nogroup",
+      ]
 
   rabbit:
     container_name: rabbit

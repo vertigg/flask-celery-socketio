@@ -7,19 +7,10 @@ from backend.tasks import long_task, message_to_client
 class TaskMessageNamespace(Namespace):
     def on_connection(self, *args):
         join_room(request.sid)
-        emit(
-            'confirmation', {
-                'connectionStatus': f'Connected to a socket, using room {request.sid}',
-                'requestSid': request.sid
-            }
-        )
-
-    def on_submit(self, *args):
-        print(args)
-        roomstr = request.sid
-        join_room(roomstr)
-        task = long_task.delay(room=roomstr)
-        message_to_client.delay(f'Task {task.id} started', room=roomstr)
+        emit('confirmation', {
+            'requestSid': request.sid,
+            'message': f'Connected to a Flask, SocketIO, using unique ID: {request.sid}'
+        })
 
     def on_disconnect(self):
         leave_room(request.sid)
