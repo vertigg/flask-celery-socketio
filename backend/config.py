@@ -1,4 +1,5 @@
 from os import getenv
+from datetime import timedelta
 
 
 class BasicConfig:
@@ -7,6 +8,7 @@ class BasicConfig:
     SECRET_KEY = getenv('SECRET_KEY', 'secretkey')
     DEFAULT_SOCKETIO_NAMESPACE = '/messages'
     SQLALCHEMY_DATABASE_URI = getenv('DB_URI')
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=1)
 
     DEBUG = True
     DEBUG_CELERY = True

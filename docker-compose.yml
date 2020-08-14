@@ -65,6 +65,8 @@ services:
       - "5672:5672"
     networks:
       - backend
+    logging:
+      driver: none
 
   postgres:
     image: postgres
@@ -79,6 +81,8 @@ services:
       - "5432:5432"
     networks:
       - backend
+    logging:
+      driver: none
 
 networks:
   backend:

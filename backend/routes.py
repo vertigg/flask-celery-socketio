@@ -1,5 +1,8 @@
+from uuid import uuid4
+
 from celery.exceptions import TimeoutError
-from flask import Blueprint, abort, jsonify, render_template, request
+from flask import (Blueprint, Response, abort, jsonify, render_template,
+                   request, session)
 
 from backend.tasks import long_task
 
@@ -8,6 +11,8 @@ basic_routes = Blueprint('simple_page', __name__)
 
 @basic_routes.route('/', methods=('get',))
 def index():
+    if not session.get('sid'):
+        session['sid'] = str(uuid4())
     return render_template('index.html')
 
 
@@ -15,9 +20,9 @@ def index():
 def start_simple_task(*args, **kwargs):
     """Starts simple Celery task on post request and returns task ID"""
     if request.method == 'POST':
-        data = request.json
-        task = long_task.delay(room=data.get('requestSid'))
-        return jsonify({'message': f'Celery task has been launched with id {task.id}'})
+        if session.get('sid'):
+            task = long_task.delay(room=session.get('sid'))
+            return jsonify({'message': f'Celery task has been launched with id {task.id}, room is {session.get("sid")}'})
     abort(404)
 
 

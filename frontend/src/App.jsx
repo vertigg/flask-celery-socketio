@@ -9,9 +9,7 @@ import {
 } from 'react-bulma-components';
 import socketIOClient from 'socket.io-client';
 import './App.css';
-
-const API_URL = 'http://127.0.0.1:5000';
-const SOCKETIO_URI = API_URL + '/messages';
+import { API_URL, SOCKETIO_URI } from './constants';
 
 export default class App extends Component {
   constructor(props) {
@@ -19,7 +17,6 @@ export default class App extends Component {
     this.state = {
       loading: false,
       messages: [],
-      requestSid: '',
       placeholder: 'Output from the server',
     };
   }
@@ -36,7 +33,6 @@ export default class App extends Component {
           ...this.state.messages,
           this.appendWithDatetime(data.message),
         ],
-        requestSid: data.requestSid,
       });
     });
     socket.on('response', (data) => {
@@ -59,9 +55,8 @@ export default class App extends Component {
 
   onTaskStart = () => {
     this.setState({ loading: true });
-    const { requestSid } = this.state;
     axios
-      .post(API_URL + '/start_task', { requestSid }, { timeout: 5000 })
+      .post(API_URL + '/start_task', { timeout: 5000 })
       .then((response) => {
         this.setState({
           messages: [
